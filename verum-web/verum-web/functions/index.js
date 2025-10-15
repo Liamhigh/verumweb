@@ -98,7 +98,7 @@ async function signPayload(payload) {
 }
 
 // ----- OpenAI triple consensus with circuit breaker -----
-const OPENAI_MODELS = ["gpt-4o-mini", "gpt-4o", "gpt-4.1-mini"];
+const OPENAI_MODELS = ["gpt-5-mini", "gpt-4o-mini", "gpt-4o", "gpt-4.1-mini"];
 
 const breaker = new Map();
 const FAIL_THRESHOLD = 3;
