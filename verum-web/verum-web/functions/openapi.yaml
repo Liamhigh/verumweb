@@ -88,7 +88,13 @@ paths:
             application/pdf: {}
   /v1/chat:
     post:
-      summary: Verum-mode chat (triple OpenAI consensus)
+      summary: Verum-mode chat with AI provider selection
+      description: |
+        Multi-provider AI chat endpoint supporting OpenAI (with triple consensus),
+        Anthropic Claude (including claude-sonnet-4), and DeepSeek.
+        
+        OpenAI provider uses triple consensus with models: gpt-5-mini, gpt-4o-mini, gpt-4o.
+        Anthropic supports claude-sonnet-4, claude-3-5-haiku-20241022, and other Claude models.
       requestBody:
         required: true
         content:
@@ -104,12 +110,20 @@ paths:
                     - openai
                     - anthropic
                     - deepseek
+                  description: AI provider selection (default: openai)
                 model:
                   type: string
+                  description: |
+                    Optional model override. Examples:
+                    - OpenAI: gpt-5-mini, gpt-4o-mini, gpt-4o
+                    - Anthropic: claude-sonnet-4, claude-3-5-haiku-20241022
+                    - DeepSeek: deepseek-chat
                 temperature:
                   type: number
                   minimum: 0
                   maximum: 2
+                  default: 0.2
+                  description: Sampling temperature for response generation
                 messages:
                   type: array
                   items:
@@ -128,7 +142,7 @@ paths:
                         type: string
       responses:
         "200":
-          description: Chat response with consensus
+          description: Chat response with provider-specific result
   /health:
     get:
       summary: Health probe
