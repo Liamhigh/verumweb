@@ -380,7 +380,7 @@ app.post("/v1/chat", async (req, res) => {
     }
     if (provider === "anthropic") {
       if (!ANTHROPICAPIKEY) return res.status(400).json({ ok: false, error: "ANTHROPICAPIKEY not configured" });
-      const mdl = model || "claude-3-5-haiku-20241022";
+      const mdl = model || "claude-sonnet-4-20250514";
       const userMsgs = finalMsgs.filter(m => m.role !== "system").map(m => ({
         role: m.role === "assistant" ? "assistant" : "user",
         content: m.content
