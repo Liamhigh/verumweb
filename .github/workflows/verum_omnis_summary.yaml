@@ -1,0 +1,203 @@
+verum_omnis:
+  title: "Verum Omnis — AI Forensics for Truth"
+  description: |
+    This YAML document captures the high‑level structure and build notes from the
+    provided Verum Omnis forensic AI PDF.  The original PDF is a sealed
+    document that describes the layout of the Android application, its core
+    source files, Gradle configuration, build instructions and post‑build
+    guidelines.  Comments (lines starting with `#`) have been added for
+    clarity and to explain the purpose of various sections.
+
+  # Project directory structure as described in the PDF (pages 3–4).  The tree
+  # hierarchy shows the key files and sub‑directories under the root
+  # `verum‑omnis` folder.  Only the most important files and folders are
+  # included – other build and wrapper files are omitted for brevity.
+  project_structure:
+    verum-omnis:
+      app:
+        Build.gradle: "Gradle build script for the application module"
+        src:
+          main:
+            AndroidManifest.xml: "Manifest declaring permissions, activities and provider"
+            java:
+              com:
+                verum:
+                  omnis:
+                    ForensicActivity.java: "Main UI/activity handling evidence pick, analysis and report generation"
+                    core:
+                      AnalysisEngine.java: "Runs behavioural analysis and scoring logic"
+                      EvidenceProcessor.java: "Secures evidence, produces SHA‑512 and HMAC digests"
+                      ReportGenerator.java: "Generates a PDF/A‑3B forensic report using iText7"
+                      AuditLogger.java: "Writes audit log entries (not shown in full)"
+                      JurisdictionManager.java: "Loads jurisdiction JSONs and legal references"
+                      # Additional core classes (LiabilityAssessor.java, etc.) omitted
+            assets:
+              model:
+                behavioral.onnx: "ONNX model for behavioural/contradiction analysis"
+        # Top‑level Gradle and settings files
+      build.gradle: "Root Gradle build script"
+      settings.gradle: "Gradle settings defining included modules"
+      gradle.properties: "Gradle property definitions"
+
+  # Key portions of the application module’s Gradle configuration (pages 4–6).
+  build_gradle:
+    namespace: com.verum.omnis
+    compileSdk: 34
+    defaultConfig:
+      applicationId: com.verum.omnis
+      minSdk: 26
+      targetSdk: 34
+      versionCode: 1
+      versionName: "1.0"
+    buildTypes:
+      release:
+        minifyEnabled: true
+        proguardFiles:
+          - proguard-android-optimize.txt
+          - proguard-rules.pro
+      debug:
+        minifyEnabled: false
+    buildConfigFields:
+      VO_RPC_URL: "https://mainnet.infura.io/v3/<YOUR_ID>"
+      VO_ANCHOR_CONTRACT: "0xYourContractAddr"
+      VO_PK_ENC: "YOUR_PLACEHOLDER_ENCRYPTED_PK"
+    dependencies:
+      android:
+        appcompat: "androidx.appcompat:appcompat:1.7.0"
+        material: "com.google.android.material:material:1.12.0"
+        activity: "androidx.activity:activity:1.9.2"
+        core_ktx: "androidx.core:core-ktx:1.13.7"
+        work_runtime: "androidx.work:work-runtime:2.9.0"
+        gson: "com.google.code.gson:gson:2.10.1"
+      pdf_generation:
+        itext7_pdf: "com.itextpdf:itext7-core:7.2.5"
+        itext7_pdfa: "com.itextpdf:itext7-pdfa:7.2.6"
+      onnx_runtime: "com.microsoft.onnxruntime:onnxruntime-android:1.18.0"
+      web3:
+        core: "org.web3j:core:4.10.0"
+      security:
+        security_crypto: "androidx.security:security-crypto:1.1.0-alpha06"
+        biometric: "androidx.biometric:biometric:2.1.0-alpha05"
+
+  # Android manifest information, summarised from page 6.  Only the
+  # key permissions, application attributes and provider are included.
+  android_manifest:
+    permissions:
+      - android.permission.INTERNET
+      - android.permission.USE_BIOMETRIC
+      - android.permission.USE_FINGERPRINT
+    application:
+      allowBackup: false
+      label: "@string/app_name"
+      supportsRtl: true
+      theme: "@style/Theme.Material3.DayNight.NoActionBar"
+      activities:
+        - name: .ForensicActivity
+          exported: true
+          intent_filter:
+            actions:
+              - android.intent.action.MAIN
+            categories:
+              - android.intent.category.LAUNCHER
+      provider:
+        name: androidx.core.content.FileProvider
+        authorities: "${applicationId}.provider"
+        exported: false
+        grantUriPermissions: true
+        metaData:
+          android.support.FILE_PROVIDER_PATHS: "@xml/file_paths"
+
+  # High‑level description of the ForensicActivity class (pages 7–9).  The
+  # code handles picking evidence, running analysis on a background thread
+  # via AnalysisEngine, generating reports and sharing them via an
+  # Intent.  Implementation details are omitted here.
+  forensic_activity:
+    overview: |
+      The ForensicActivity extends AppCompatActivity and acts as the main
+      user interface.  It allows the user to pick a file (evidence) using
+      an ActivityResultLauncher, displays progress via a ProgressBar and
+      status TextView, and performs the following sequence when evidence is
+      selected:
+      
+        1. **Secure Evidence** – EvidenceProcessor.secureEvidence() reads
+           the file, produces a SHA‑512 digest and device HMAC, and writes
+           the secured file to internal storage.
+        2. **Analyze Evidence** – AnalysisEngine.analyze() runs the
+           behavioural model on the secured file and returns a ForensicReport.
+        3. **Generate Report** – ReportGenerator.createCourtReport() takes
+           the ForensicReport and writes a PDF/A‑3B report containing
+           jurisdiction, risk score, behavioural analysis, legal references
+           and integrity seals.
+      
+      When analysis completes, the share button is made visible and
+      triggers an ACTION_SEND intent with the report file attached.
+
+  # High‑level description of the EvidenceProcessor class (pages 10–11).
+  evidence_processor:
+    overview: |
+      EvidenceProcessor.secureEvidence(Context, Uri) copies the evidence to
+      internal storage while computing both a SHA‑512 digest (using
+      MessageDigest) and a device HMAC (using AndroidKeyStore and HmacSHA512).
+      If the HMAC key alias does not exist, it is generated on the fly.
+      The method writes the file, updates both digests on the fly, and
+      returns a ProcessedEvidence object containing the file, its
+      sha512Public digest and device HMAC digest.
+
+  # High‑level description of the ReportGenerator class (pages 12–13).  This
+  # summary explains what the class writes into the court report.
+  report_generator:
+    overview: |
+      ReportGenerator.createCourtReport(Context, ForensicReport) uses the
+      iText7 library to create a PDF/A‑3B forensic report.  The report
+      includes:
+        - **Metadata:** Title, author ("Verum Omnis AI System"), subject
+          ("Behavioural Forensic Analysis"), keywords and creator.
+        - **Jurisdiction:** The jurisdiction name and risk score as
+          computed by the AnalysisEngine.
+        - **Behavioural Analysis:** Contradiction score and sighting score
+          (both expressed as percentages).
+        - **Legal References:** List of legal references relevant to the
+          jurisdiction.
+        - **Integrity Seals:** Public SHA‑512 digest, device HMAC digest
+          and blockchain transaction ID.
+      
+      The report is saved to the app’s files directory with a name
+      "VO_Forensic_Report_⟨timestamp⟩.pdf".  If an error occurs, a
+      RuntimeException is thrown.
+
+  # Build and provisioning instructions summarised from pages 14–15.
+  build_instructions:
+    - "Create a new Android project in Android Studio with package name `com.verum.omnis` and minimum SDK 26."
+    - "Replace the default files with those described in this YAML (project structure and Gradle configuration)."
+    - "Add required assets: place `behavioral.onnx` in `app/src/main/assets/model/`, add the ICC profile at `app/src/main/res/raw/srgb_icc`, and add the font `notosans_regular.ttf` in `app/src/main/res/font/`."
+    - "Add jurisdiction JSON files under `app/src/main/res/raw/`, for example `uae_jurisdiction.json` (see below)."
+    - "Run the build with `./gradlew clean assembleDebug` to produce a debug APK."
+  post_build_configuration:
+    - "Run the app and use the Provision key option to provision a blockchain key.  Enter your 64‑character Ethereum private key; the app stores an encrypted version."
+    - "Update the Gradle buildConfig fields (`VO_RPC_URL`, `VO_ANCHOR_CONTRACT` and `VO_PK_ENC`) with your actual Infura RPC URL, deployed contract address and encrypted private key."
+    - "For production: obtain a commercial iText license, set up CI/CD with veraPDF validation, and implement biometric authentication."
+
+  # Example of a jurisdiction JSON object (page 14).  Additional jurisdictions
+  # follow the same schema.
+  jurisdiction_example:
+    code: "UAE"
+    name: "United Arab Emirates"
+    legalReferences:
+      - "Federal Law 32/2021"
+      - "RAKEZ Regulation"
+      - "Penal Code Article 257 (Forgery)"
+      - "Commercial Companies Law Article 84 (Fiduciary Duty)"
+      - "Commercial Companies Law Article 110 (Shareholder Rights)"
+    escalationThreshold: 7.5
+    authorities:
+      - "RAKEZ"
+      - "Dubai Courts"
+      - "ADGM Court Holder Rights"
+
+  # Seal information from the final page.  The hash is truncated here to fit on
+  # one line.  The full SHA‑512 hash can be found in the original PDF.  The
+  # sealed timestamp is in ISO 8601 format.
+  sealed_document:
+    sha512_hash: "624bfc465ce512815219520a0863b3e817b8a77478f69960617bee5b17c30eb41bf825bbe3cbc5ba16c74adca8d04743640a4c8bdc25c60834665945604"
+    sealed_at: "2025-10-14T23:05:41.131Z"
+    verify_url: "https://verumglobal.foundation/verify?hash=624bfc465ce5128152195..."
