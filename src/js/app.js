@@ -3,6 +3,11 @@
  * Implements the UI logic and orchestrates the analysis workflow
  */
 
+// Configuration constants
+const CONFIG = {
+    constitutionFile: 'verum-constitution.json'
+};
+
 document.addEventListener('DOMContentLoaded', function() {
     // Initialize engines
     const rulesEngine = new RulesEngine();
@@ -235,7 +240,7 @@ document.addEventListener('DOMContentLoaded', function() {
 
     async function loadConstitution() {
         try {
-            const response = await fetch('verum-constitution.json');
+            const response = await fetch(CONFIG.constitutionFile);
             const constitution = await response.json();
             console.log('Verum Omnis Constitution loaded:', constitution.version);
             console.log('Engine:', constitution.engine);

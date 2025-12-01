@@ -18,7 +18,7 @@ A web-based forensic document analysis engine implementing the Verum Omnis Const
 ## 🛠️ Technology
 
 - **Frontend**: Pure HTML/CSS/JavaScript
-- **PDF Generation**: jsPDF library
+- **PDF Generation**: Pure JavaScript implementation (no external dependencies)
 - **Cryptography**: Web Crypto API (SHA-512, SHA-256)
 - **Analysis Engine**: Custom rules-based engine
 

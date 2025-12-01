@@ -4,6 +4,12 @@
  * Uses pure JavaScript PDF generation (no external dependencies)
  */
 
+// Constants for PDF generation
+const PDF_MARGIN = 50;
+const PDF_LINE_HEIGHT = 12;
+const PDF_PAGE_WIDTH = 612;
+const PDF_PAGE_HEIGHT = 792;
+
 class CryptoSealer {
     constructor() {
         this.watermark = "VERUM OMNIS FORENSIC SEAL";
@@ -160,6 +166,20 @@ class CryptoSealer {
     }
 
     /**
+     * Escape special characters for PDF strings
+     */
+    escapePDFString(str) {
+        return str
+            .replace(/\\/g, '\\\\')
+            .replace(/\(/g, '\\(')
+            .replace(/\)/g, '\\)')
+            .replace(/\r\n/g, ' ')
+            .replace(/\n/g, ' ')
+            .replace(/\r/g, ' ')
+            .replace(/\t/g, '    ');
+    }
+
+    /**
      * Generate PDF using basic PDF structure
      */
     generatePDFBytes(content, seal) {
@@ -182,16 +202,16 @@ class CryptoSealer {
         
         // Page
         objectCount++;
-        objects.push(`${objectCount} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 612 792] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n`);
+        objects.push(`${objectCount} 0 obj\n<< /Type /Page /Parent 2 0 R /MediaBox [0 0 ${PDF_PAGE_WIDTH} ${PDF_PAGE_HEIGHT}] /Contents 4 0 R /Resources << /Font << /F1 5 0 R >> >> >>\nendobj\n`);
         
         // Content stream
         let contentStream = 'BT\n/F1 10 Tf\n';
-        let yPos = 750;
+        let yPos = PDF_PAGE_HEIGHT - PDF_MARGIN;
         for (const line of lines) {
-            if (yPos < 50) break;
-            const escapedLine = line.replace(/\\/g, '\\\\').replace(/\(/g, '\\(').replace(/\)/g, '\\)');
-            contentStream += `50 ${yPos} Td\n(${escapedLine}) Tj\n0 -12 Td\n`;
-            yPos -= 12;
+            if (yPos < PDF_MARGIN) break;
+            const escapedLine = this.escapePDFString(line);
+            contentStream += `${PDF_MARGIN} ${yPos} Td\n(${escapedLine}) Tj\n0 -${PDF_LINE_HEIGHT} Td\n`;
+            yPos -= PDF_LINE_HEIGHT;
         }
         contentStream += 'ET';
         

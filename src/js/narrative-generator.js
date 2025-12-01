@@ -3,6 +3,9 @@
  * Generates human-readable forensic narratives from analysis results
  */
 
+// Configuration constants
+const MAX_DISPLAYED_FINDINGS = 10;
+
 class NarrativeGenerator {
     constructor() {
         this.templates = {
@@ -150,11 +153,11 @@ class NarrativeGenerator {
         
         if (scoreData.findings && scoreData.findings.length > 0) {
             lines.push("Contributing factors:");
-            for (const finding of scoreData.findings.slice(0, 10)) {
+            for (const finding of scoreData.findings.slice(0, MAX_DISPLAYED_FINDINGS)) {
                 lines.push(`   • ${finding}`);
             }
-            if (scoreData.findings.length > 10) {
-                lines.push(`   ... and ${scoreData.findings.length - 10} more factors`);
+            if (scoreData.findings.length > MAX_DISPLAYED_FINDINGS) {
+                lines.push(`   ... and ${scoreData.findings.length - MAX_DISPLAYED_FINDINGS} more factors`);
             }
         }
 
