@@ -1,0 +1,141 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Verum Omnis - Forensic Document Engine</title>
+    <link rel="stylesheet" href="src/css/styles.css">
+</head>
+<body>
+    <div class="container">
+        <!-- Header with Logo -->
+        <header class="header">
+            <img src="mainlogo_1761854847320-DGwsmXaN.png" alt="Verum Omnis Logo" class="main-logo">
+            <h1>Verum Omnis</h1>
+            <p class="subtitle">Forensic Document Analysis Engine</p>
+            <p class="tagline">Cryptographically Sealed Reports & Evidence</p>
+        </header>
+
+        <!-- Main Application -->
+        <main class="main-content">
+            <!-- Document Upload Section -->
+            <section class="upload-section">
+                <h2>📄 Document Analysis</h2>
+                <div class="upload-area" id="dropZone">
+                    <input type="file" id="fileInput" accept=".pdf,.png,.jpg,.jpeg,.txt,.doc,.docx" multiple>
+                    <div class="upload-icon">📁</div>
+                    <p>Drop files here or click to upload</p>
+                    <p class="file-types">Supports: PDF, Images, Text, Documents</p>
+                </div>
+                <div id="fileList" class="file-list"></div>
+            </section>
+
+            <!-- Text Input Section -->
+            <section class="text-section">
+                <h2>📝 Evidence Text Input</h2>
+                <textarea id="evidenceText" placeholder="Enter or paste evidence text for analysis...&#10;&#10;Include statements, communications, or any text that needs forensic analysis."></textarea>
+            </section>
+
+            <!-- Analysis Options -->
+            <section class="options-section">
+                <h2>⚙️ Analysis Options</h2>
+                <div class="options-grid">
+                    <label class="option">
+                        <input type="checkbox" id="contradictionEngine" checked>
+                        <span>Contradiction Detection</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" id="fraudDetection" checked>
+                        <span>Fraud Pattern Detection</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" id="timelineAnalysis" checked>
+                        <span>Timeline Analysis</span>
+                    </label>
+                    <label class="option">
+                        <input type="checkbox" id="dishonestyMatrix" checked>
+                        <span>Dishonesty Matrix</span>
+                    </label>
+                </div>
+                <div class="hash-selection">
+                    <label for="hashType">Cryptographic Seal Type:</label>
+                    <select id="hashType">
+                        <option value="SHA-512" selected>SHA-512 (Recommended)</option>
+                        <option value="SHA-256">SHA-256</option>
+                    </select>
+                </div>
+            </section>
+
+            <!-- Analyze Button -->
+            <button id="analyzeBtn" class="analyze-btn">
+                🔍 Analyze & Generate Sealed Report
+            </button>
+
+            <!-- Results Section -->
+            <section id="resultsSection" class="results-section hidden">
+                <h2>📊 Forensic Analysis Results</h2>
+                
+                <!-- Integrity Seal -->
+                <div class="integrity-seal">
+                    <div class="seal-icon">🔐</div>
+                    <div class="seal-info">
+                        <strong>Cryptographic Integrity Seal</strong>
+                        <code id="integrityHash"></code>
+                    </div>
+                </div>
+
+                <!-- Narrative Output -->
+                <div class="narrative-box">
+                    <h3>📖 Forensic Narrative</h3>
+                    <div id="narrativeOutput"></div>
+                </div>
+
+                <!-- Contradictions Found -->
+                <div class="contradictions-box">
+                    <h3>⚠️ Contradictions Detected</h3>
+                    <div id="contradictionsOutput"></div>
+                </div>
+
+                <!-- Legal Tags -->
+                <div class="tags-box">
+                    <h3>🏷️ Legal Subject Tags</h3>
+                    <div id="tagsOutput"></div>
+                </div>
+
+                <!-- Dishonesty Score -->
+                <div class="score-box">
+                    <h3>📈 Dishonesty Score</h3>
+                    <div class="score-display">
+                        <div class="score-bar">
+                            <div id="scoreBar" class="score-fill"></div>
+                        </div>
+                        <span id="scoreValue">0/10</span>
+                    </div>
+                </div>
+
+                <!-- Download Button -->
+                <button id="downloadBtn" class="download-btn">
+                    📥 Download Cryptographically Sealed PDF
+                </button>
+            </section>
+        </main>
+
+        <!-- Footer -->
+        <footer class="footer">
+            <div class="footer-logos">
+                <img src="logo2_1761854847446-Da952KdJ.png" alt="Logo 2" class="footer-logo">
+                <img src="logo3_1761854847416-Bnu_mNfy.png" alt="Logo 3" class="footer-logo">
+            </div>
+            <p>Verum Omnis Forensic Engine v1.0</p>
+            <p class="constitution-stamp">🛡️ Operating under Verum Omnis Constitutional Governance</p>
+            <p class="creator">Created by Liam Highcock | Verum Global Foundation</p>
+        </footer>
+    </div>
+
+    <!-- Scripts -->
+    <script src="src/js/rules-engine.js"></script>
+    <script src="src/js/crypto-sealer.js"></script>
+    <script src="src/js/narrative-generator.js"></script>
+    <script src="src/js/app.js"></script>
+</body>
+</html>

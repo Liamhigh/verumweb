@@ -1,0 +1,36 @@
+{
+    "contradictions": {
+        "weight": 3,
+        "examples": ["Opposing statements vs evidence"],
+        "patterns": [
+            "no deal.*invoice",
+            "denied.*admitted",
+            "refused.*accepted",
+            "never.*always",
+            "no access.*logged in"
+        ]
+    },
+    "omissions": {
+        "weight": 2,
+        "examples": ["Cropped screenshots", "Selective editing"],
+        "patterns": [
+            "selective.*edit",
+            "missing.*context",
+            "cropped.*screenshot",
+            "partial.*image",
+            "redacted"
+        ]
+    },
+    "deflection": {
+        "weight": 2,
+        "examples": ["Whataboutism", "False distinctions"],
+        "patterns": [
+            "but they did",
+            "what about",
+            "you also",
+            "that's different",
+            "not the same"
+        ]
+    },
+    "description": "Dishonesty detection matrix based on Verum Omnis Ideal Logic"
+}
