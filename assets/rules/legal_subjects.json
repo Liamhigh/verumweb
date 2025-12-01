@@ -1,0 +1,44 @@
+[
+    {
+        "name": "Shareholder Oppression",
+        "keywords": ["denied meeting", "withheld financial", "exclusion", "minority", "blocked", "prevented access"],
+        "severity": "HIGH",
+        "description": "Minority shareholder rights violations"
+    },
+    {
+        "name": "Breach of Fiduciary Duty",
+        "keywords": ["self-dealing", "conflict of interest", "personal benefit", "breach of trust", "misappropriation"],
+        "severity": "HIGH",
+        "description": "Violation of trust and fiduciary responsibilities"
+    },
+    {
+        "name": "Cybercrime",
+        "keywords": ["unauthorized access", "gmail", "device logs", "hacking", "password", "account access", "data theft"],
+        "severity": "CRITICAL",
+        "description": "Unauthorized access to digital systems or data"
+    },
+    {
+        "name": "Fraud",
+        "keywords": ["misrepresentation", "false statement", "deceived", "forged", "fabricated", "falsified"],
+        "severity": "CRITICAL",
+        "description": "Intentional deception for unlawful gain"
+    },
+    {
+        "name": "Financial Manipulation",
+        "keywords": ["hidden income", "undisclosed", "off-books", "diverted funds", "unexplained transfers"],
+        "severity": "HIGH",
+        "description": "Improper handling of financial resources"
+    },
+    {
+        "name": "Coercion",
+        "keywords": ["threatened", "forced", "pressured", "intimidated", "blackmail", "ultimatum"],
+        "severity": "CRITICAL",
+        "description": "Use of force or threats to compel action"
+    },
+    {
+        "name": "Rights Violation",
+        "keywords": ["denied rights", "discriminated", "violated privacy", "harassment", "abuse"],
+        "severity": "HIGH",
+        "description": "Violation of fundamental rights"
+    }
+]

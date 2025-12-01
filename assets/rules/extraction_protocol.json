@@ -1,0 +1,21 @@
+{
+    "step1_keywords": [
+        "admin", "deny", "forged", "access", "delete", 
+        "refuse", "invoice", "profit", "hide", "secret",
+        "unauthorized", "breach", "fraud", "misrepresent"
+    ],
+    "step2_tags": [
+        "#Cybercrime", 
+        "#Fraud", 
+        "#Oppression", 
+        "#FiduciaryBreach",
+        "#Coercion",
+        "#RightsViolation"
+    ],
+    "step3_scoring": {
+        "low": {"weight": 1, "color": "#4CAF50", "threshold": 2},
+        "medium": {"weight": 2, "color": "#FF9800", "threshold": 5},
+        "high": {"weight": 3, "color": "#F44336", "threshold": 10}
+    },
+    "description": "Extraction protocol for forensic document analysis"
+}
