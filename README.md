@@ -68,8 +68,8 @@ class JurisdictionDetector(private val context: Context) {
         
         val country = addresses?.firstOrNull()
         return JurisdictionInfo(
-            countryCode = country?.countryCode ?: "ZA", // Default to South Africa
-            countryName = country?.countryName ?: "South Africa",
+            countryCode = country?.countryCode ?: "INTL", // International if location unavailable
+            countryName = country?.countryName ?: "International",
             timezone = TimeZone.getTimeZone(getTimezoneForLocation(location)),
             legalFramework = getLegalFramework(country?.countryCode),
             coordinates = LatLng(location.latitude, location.longitude),
@@ -153,11 +153,13 @@ class ForensicTimestamp(private val context: Context) {
     
     /**
      * Get the most accurate timestamp available
+     * Note: tryGetGpsTime() and tryGetNtpOffset() are platform-specific implementations
+     * that retrieve GPS satellite time and Network Time Protocol offsets respectively.
      */
     suspend fun getAccurateTimestamp(jurisdiction: JurisdictionInfo): AccurateTimestamp {
         // Priority: GPS > NTP > System
-        val gpsTime = tryGetGpsTime()
-        val ntpOffset = tryGetNtpOffset()
+        val gpsTime = tryGetGpsTime()      // Returns GPS atomic clock time or null
+        val ntpOffset = tryGetNtpOffset()  // Returns NTP sync offset or null
         
         val (utcMillis, source, accuracy) = when {
             gpsTime != null -> Triple(gpsTime, TimestampSource.GPS_ATOMIC, TimestampAccuracy.ATOMIC)
